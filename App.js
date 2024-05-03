@@ -22,8 +22,8 @@ export default function App() {
       Alert.alert("Sucesso", "Usuário cadastrado com sucesso!");
       console.log(response.data);
     } catch (error) {
-      console.error(error);
-      console.error(error.response.data);
+      console.log(error.response.data.msg);
+      console.log(error.response.status);
       Alert.alert("Erro", "Houve um problema ao cadastrar o usuário.");
     }
   };
