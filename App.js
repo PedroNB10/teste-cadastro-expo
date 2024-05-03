@@ -1,30 +1,32 @@
 import React, { useState } from "react";
-import { StyleSheet, Text, View, TextInput, Button, Alert } from "react-native";
+import { StyleSheet, View, TextInput, Button, Alert } from "react-native";
 import axios from "axios";
 
 export default function App() {
-  const [nome, setNome] = useState("");
-  const [email, setEmail] = useState("");
-  const [senha, setSenha] = useState("");
-  const [cpf, setCpf] = useState("");
+  const [produtoId, setProdutoId] = useState("");
 
-  const handleSubmit = async () => {
+  const adicionarAoCarrinho = async () => {
     try {
       const response = await axios.post(
-        "http://capacitacao.byronsolutions.com:3000/usuarios",
+        "http://capacitacao.byronsolutions.com:3000/carrinho/adicionar/" +
+          produtoId,
+        {}, // Corpo da requisição vazio, pois o ID do produto é passado na URL
         {
-          nome,
-          email,
-          senha,
-          cpf,
+          headers: {
+            Authorization: "Bearer seu_token",
+          },
         }
       );
-      Alert.alert("Sucesso", "Usuário cadastrado com sucesso!");
+      Alert.alert("Sucesso", "Produto adicionado ao carrinho!");
       console.log(response.data);
+      console.log(response.status);
     } catch (error) {
       console.log(error.response.data.msg);
       console.log(error.response.status);
-      Alert.alert("Erro", "Houve um problema ao cadastrar o usuário.");
+      Alert.alert(
+        "Erro",
+        "Houve um problema ao adicionar o produto ao carrinho."
+      );
     }
   };
 
@@ -32,32 +34,12 @@ export default function App() {
     <View style={styles.container}>
       <TextInput
         style={styles.input}
-        placeholder="Nome"
-        value={nome}
-        onChangeText={setNome}
-      />
-      <TextInput
-        style={styles.input}
-        placeholder="Email"
-        value={email}
-        onChangeText={setEmail}
-        keyboardType="email-address"
-      />
-      <TextInput
-        style={styles.input}
-        placeholder="Senha"
-        value={senha}
-        onChangeText={setSenha}
-        secureTextEntry
-      />
-      <TextInput
-        style={styles.input}
-        placeholder="CPF"
-        value={cpf}
-        onChangeText={setCpf}
+        placeholder="ID do Produto"
+        value={produtoId}
+        onChangeText={setProdutoId}
         keyboardType="numeric"
       />
-      <Button title="Cadastrar" onPress={handleSubmit} />
+      <Button title="Adicionar ao Carrinho" onPress={adicionarAoCarrinho} />
     </View>
   );
 }
